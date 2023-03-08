@@ -1,0 +1,48 @@
+
+#include <iostream>
+#include <vector>
+#include <stdio.h>
+#include <sys/time.h>
+
+using namespace std;
+
+vector<int> countBits(int n) {
+    vector<int> result(n+1, 0);
+    for (int i=1; i<=n; i++) {
+        result[i] = result[i & (i-1)] + 1;
+    }
+    return result;
+}
+
+int main() {
+    int n;
+    cout << "Ingrese un entero no negativo: ";
+    cin >> n;
+
+    // Start measuring time
+    static unsigned long pre_time;
+    static unsigned long pre_secs;
+    struct timespec ts;
+    unsigned long long tiempo;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    pre_time=ts.tv_nsec;
+    pre_secs=ts.tv_sec;
+
+    vector<int> result = countBits(n);
+
+    // Stop measuring time and calculate the elapsed time
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    tiempo=(ts.tv_sec-pre_secs)*1000000000+ts.tv_nsec - pre_time;
+    printf("Tiempo de ejecución: %llu microsegundos\n", tiempo/1000);
+
+    cout << "[";
+    for (int i=0; i<=n; i++) {
+        cout << result[i];
+        if (i < n) {
+            cout << ",";
+        }
+    }
+    cout << "]" << endl;
+
+    return 0;
+}
